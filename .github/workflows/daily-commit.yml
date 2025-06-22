@@ -1,0 +1,25 @@
+name: Daily Commit
+
+on:
+  schedule:
+    # Runs every day at 6:30 AM UTC (adjust if needed)
+    - cron: '30 6 * * *'
+
+jobs:
+  daily-commit-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Update Timestamp File - 21f1003035@ds.study.iitm.ac.in
+        run: |
+          echo "Last run: $(date -u)" > last-run.txt
+
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add last-run.txt
+          git commit -m "Daily commit - $(date -u)" || echo "No changes to commit"
+          git push
